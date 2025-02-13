@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "172864325420",
+    "project_id": "anutio-chat-app",
+    "storage_bucket": "anutio-chat-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172864325420:android:b99c4f1ed9c296d5548e89",
+        "android_client_info": {
+          "package_name": "com.example.anutio_chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk4bQ9jreLmBFTM7OmucSfbeIi8rW9Dwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

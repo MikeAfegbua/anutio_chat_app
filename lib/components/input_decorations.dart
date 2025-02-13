@@ -16,3 +16,17 @@ const kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(32.0)),
   ),
 );
+
+abstract interface class BaseService {
+  Future<void> login() async {}
+}
+
+class FirebaseService extends BaseService {
+  @override
+  Future<void> login() async {}
+}
+
+class RESTApiService extends BaseService {
+  @override
+  Future<void> login() async {}
+}
