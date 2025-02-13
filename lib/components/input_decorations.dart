@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// INPUT DECORATION FOR TEXTFIELD
 const kTextFieldDecoration = InputDecoration(
   hintText: 'Enter your val',
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
