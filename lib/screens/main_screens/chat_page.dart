@@ -67,7 +67,10 @@ class _ChatPageState extends State<ChatPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: _firestore.collection('messages').snapshots(),
+                stream: _firestore
+                    .collection('messages')
+                    .orderBy('date', descending: true)
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const Center(
@@ -77,7 +80,7 @@ class _ChatPageState extends State<ChatPage> {
                     );
                   }
 
-                  final messages = snapshot.data?.docs ?? [];
+                  final messages = snapshot.data?.docs.reversed ?? [];
                   List<MessageBubbleWidget> messageWidgets = [];
 
                   for (var message in messages) {
@@ -92,9 +95,9 @@ class _ChatPageState extends State<ChatPage> {
                     );
                     messageWidgets.add(messageBubble);
                   }
+
                   return Expanded(
                     child: ListView(
-                      // reverse: true,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20.0,
                         vertical: 10,
@@ -112,6 +115,7 @@ class _ChatPageState extends State<ChatPage> {
                     {
                       'text': messageText,
                       'sender': loggedInUser.email,
+                      'date': FieldValue.serverTimestamp(),
                     },
                   );
                 },
