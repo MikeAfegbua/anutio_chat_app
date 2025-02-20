@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 final _firestore = FirebaseFirestore.instance;
 late User loggedInUser;
@@ -69,7 +70,7 @@ class _ChatPageState extends State<ChatPage> {
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: _firestore
                     .collection('messages')
-                    .orderBy('date', descending: true)
+                    .orderBy('date')
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
@@ -80,17 +81,19 @@ class _ChatPageState extends State<ChatPage> {
                     );
                   }
 
-                  final messages = snapshot.data?.docs.reversed ?? [];
+                  final messages = snapshot.data?.docs ?? [];
                   List<MessageBubbleWidget> messageWidgets = [];
 
                   for (var message in messages) {
                     final messageText = message['text'];
                     final messageSender = message['sender'];
+                    final date = message['date'] ?? Timestamp.now();
 
                     final currentUser = loggedInUser.email;
                     final messageBubble = MessageBubbleWidget(
                       text: messageText,
                       sender: messageSender,
+                      date: date,
                       isMe: currentUser == messageSender,
                     );
                     messageWidgets.add(messageBubble);
@@ -136,14 +139,22 @@ class MessageBubbleWidget extends StatelessWidget {
     required this.text,
     required this.sender,
     required this.isMe,
+    required this.date,
     super.key,
   });
   final String text;
   final String sender;
+  final Timestamp date;
   final bool isMe;
 
   @override
   Widget build(BuildContext context) {
+    String dateToString() {
+      final dateTime = DateTime.fromMillisecondsSinceEpoch(date.seconds * 1000);
+      final formattedDate = DateFormat('y, MMM, d, hh:mm:aa').format(dateTime);
+      return formattedDate;
+    }
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
@@ -151,8 +162,11 @@ class MessageBubbleWidget extends StatelessWidget {
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Text(
-            sender, //' $sender ${DateTime.fromMillisecondsSinceEpoch(time.seconds * 1000)}',
+            '$sender ${dateToString()}',
             style: const TextStyle(fontSize: 12.0, color: Colors.black54),
+          ),
+          SizedBox(
+            height: 5,
           ),
           Material(
             elevation: 5,
